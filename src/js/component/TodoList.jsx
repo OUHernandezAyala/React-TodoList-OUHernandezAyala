@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-
 const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [taskInput, setTaskInput] = useState("");
@@ -27,6 +26,26 @@ const Todo = () => {
     }
   };
 
+  const handleMouseEnter = (id) => {
+    const updatedTodos = todos.map((item) => {
+      if (item.id === id) {
+        return { ...item, showButton: true };
+      }
+      return item;
+    });
+    setTodos(updatedTodos);
+  };
+
+  const handleMouseLeave = (id) => {
+    const updatedTodos = todos.map((item) => {
+      if (item.id === id) {
+        return { ...item, showButton: false };
+      }
+      return item;
+    });
+    setTodos(updatedTodos);
+  };
+
   return (
     <div className="contenedorTodolist">
       <div className="tittleTodos">todos</div>
@@ -42,23 +61,29 @@ const Todo = () => {
         />
 
         <ul>
-          {todos.length == 0 ? (<li>No Task</li>) : (
+          {todos.length === 0 ? (
+            <li>No Task</li>
+          ) : (
             todos.map((item) => (
-            <li key={item.id}>
-              {item.value}
-              <button
-                className="delete-button"
-                onClick={() => deleteTask(item.id)}
+              <li
+                key={item.id}
+                onMouseEnter={() => handleMouseEnter(item.id)}
+                onMouseLeave={() => handleMouseLeave(item.id)}
               >
-                X
-              </button>
-            </li>
-          ))
+                {item.value}
+                {item.showButton && (
+                  <button
+                    className="delete-button"
+                    onClick={() => deleteTask(item.id)}
+                  >
+                    X
+                  </button>
+                )}
+              </li>
+            ))
           )}
-            <div className="counter">
-            {todos.length} item 
-            </div>
-          </ul>
+          <div className="counter">{todos.length} item</div>
+        </ul>
       </div>
     </div>
   );
