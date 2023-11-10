@@ -26,7 +26,7 @@ const Todo = () => {
     }
   };
 
-  const handleMouseEnter = (id) => {
+  const mouseEnter = (id) => {
     const updatedTodos = todos.map((item) => {
       if (item.id === id) {
         return { ...item, showButton: true };
@@ -36,7 +36,7 @@ const Todo = () => {
     setTodos(updatedTodos);
   };
 
-  const handleMouseLeave = (id) => {
+  const mouseLeave = (id) => {
     const updatedTodos = todos.map((item) => {
       if (item.id === id) {
         return { ...item, showButton: false };
@@ -67,8 +67,8 @@ const Todo = () => {
             todos.map((item) => (
               <li
                 key={item.id}
-                onMouseEnter={() => handleMouseEnter(item.id)}
-                onMouseLeave={() => handleMouseLeave(item.id)}
+                onMouseEnter={() => mouseEnter(item.id)}
+                onMouseLeave={() => mouseLeave(item.id)}
               >
                 {item.value}
                 {item.showButton && (
