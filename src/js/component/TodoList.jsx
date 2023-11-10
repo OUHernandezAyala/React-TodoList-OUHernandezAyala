@@ -25,26 +25,26 @@ const Todo = () => {
       addTask();
     }
   };
-
-  const mouseEnter = (id) => {
-    const updatedTodos = todos.map((item) => {
-      if (item.id === id) {
-        return { ...item, showButton: true };
-      }
-      return item;
-    });
-    setTodos(updatedTodos);
-  };
-
-  const mouseLeave = (id) => {
-    const updatedTodos = todos.map((item) => {
-      if (item.id === id) {
-        return { ...item, showButton: false };
-      }
-      return item;
-    });
-    setTodos(updatedTodos);
-  };
+    const mouseEnter = (id) => {
+      const updatedTodos = todos.map((item) => {
+        return {
+          ...item,
+          showButton: item.id === id,
+        };
+      });
+      setTodos(updatedTodos);
+    };
+    
+    const mouseLeave = () => {
+      const updatedTodos = todos.map((item) => {
+        return {
+          ...item,
+          showButton: false,
+        };
+      });
+      setTodos(updatedTodos);
+    };
+    
 
   return (
     <div className="contenedorTodolist">
