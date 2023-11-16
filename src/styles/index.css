@@ -42,6 +42,7 @@ ul {
   }
   
   .delete-button {
+    display: none;
     color: #555454;
     padding: 6px;
     border: none;
@@ -84,3 +85,6 @@ ul {
 
  
 
+  li:hover .delete-button {
+    display: inline-block;
+  }
