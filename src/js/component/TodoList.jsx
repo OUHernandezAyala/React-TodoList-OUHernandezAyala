@@ -1,23 +1,92 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [taskInput, setTaskInput] = useState("");
 
+  const getTask = async () => {
+    try {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/OUHernandezAyalaLatm23');
+      if (response.status !== 200) {
+        console.log(`Ocurrió un error ${response.status}`);
+        return;
+      }
+      const body = await response.json();
+      setTodos(body);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const putTask = async (taskInput) => {
+    const newTodoApi = {
+      label: taskInput,
+      done: false
+    };
+  
+    try {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/OUHernandezAyalaLatm23', {
+        method: 'PUT',
+        body: JSON.stringify([...todos, newTodoApi]),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (response.status !== 200) {
+        console.log(`Ocurrió un error ${response.status}`);
+      } else {
+        setTodos([...todos, newTodoApi]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteTaskApi = async (updatedTodos) => {
+    try {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/OUHernandezAyalaLatm23', {
+        method: 'PUT',
+        body: JSON.stringify(updatedTodos),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (response.status !== 200) {
+        console.log(`Ocurrió un error ${response.status}`);
+      } else {
+        setTodos(updatedTodos);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  
+
+
+  useEffect(() => {
+    getTask();
+  }, []);
+
   const addTask = () => {
     if (taskInput.trim() !== "") {
       const newTodo = {
         id: Date.now().toString(),
-        value: taskInput,
+        label: taskInput,
       };
       setTodos([...todos, newTodo]);
+      putTask(taskInput)
       setTaskInput("");
+      
     }
   };
 
-  const deleteTask = (id) => {
-    const updatedTodos = todos.filter((item) => item.id !== id);
-    setTodos(updatedTodos);
+  const deleteTask = (label) => {
+    const updatedTodos = todos.filter((item) => item.label !== label);
+    deleteTaskApi(updatedTodos);
+
   };
 
   const handleKeyDown = (event) => {
@@ -25,26 +94,6 @@ const Todo = () => {
       addTask();
     }
   };
-    const mouseEnter = (id) => {
-      const updatedTodos = todos.map((item) => {
-        return {
-          ...item,
-          showButton: item.id === id,
-        };
-      });
-      setTodos(updatedTodos);
-    };
-    
-    const mouseLeave = () => {
-      const updatedTodos = todos.map((item) => {
-        return {
-          ...item,
-          showButton: false,
-        };
-      });
-      setTodos(updatedTodos);
-    };
-    
 
   return (
     <div className="contenedorTodolist">
@@ -61,28 +110,22 @@ const Todo = () => {
         />
 
         <ul>
-          {todos.length === 0 ? (
-            <li>No Task</li>
-          ) : (
+          {todos && todos.length > 0 ? (
             todos.map((item) => (
-              <li
-                key={item.id}
-                onMouseEnter={() => mouseEnter(item.id)}
-                onMouseLeave={() => mouseLeave(item.id)}
-              >
-                {item.value}
-                {item.showButton && (
-                  <button
-                    className="delete-button"
-                    onClick={() => deleteTask(item.id)}
-                  >
-                    X
-                  </button>
-                )}
+              <li key={item.id}>
+                {item.label}
+                <button
+                  className="delete-button"
+                  onClick={() => deleteTask(item.label)}
+                >
+                  X
+                </button>
               </li>
             ))
+          ) : (
+            <li>No hay tareas</li>
           )}
-          <div className="counter">{todos.length} item</div>
+          <div className="counter">{todos ? todos.length : 0} item</div>
         </ul>
       </div>
     </div>
@@ -90,3 +133,4 @@ const Todo = () => {
 };
 
 export default Todo;
+
