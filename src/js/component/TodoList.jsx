@@ -8,11 +8,6 @@ const Todo = () => {
     console.log("Entrando a getTask");
     try {
       const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/OUHernandezAyalaLatm23');
-      if (response.status === 404){
-        console.log(`Ocurrió un error ${response.status}.Debemos crear el ustario`)
-        createUser()
-        return;
-      }
       if (response.status !== 200) {
         console.log(`Ocurrió un error ${response.status}`);
         return;
@@ -81,7 +76,7 @@ const Todo = () => {
     });
     if (response.status !== 200) {
       console.log(`Ocurrió un error ${response.status}`)
-      getTask()}
+      createUser()}
       
     }
     
@@ -90,7 +85,15 @@ const Todo = () => {
     }
   }
 
-  const deleteTaskApi = async (updatedTodos) => {
+  const deleteTaskApi = async (label) => {
+    const updatedTodos = todos.filter((item) => item.label !== label);
+  
+    if (updatedTodos.length === 0) {
+      console.log("Eliminando usuario porque no hay tareas");
+      await deleteUser();
+      return;
+    }
+  
     try {
       const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/OUHernandezAyalaLatm23', {
         method: 'PUT',
@@ -100,15 +103,18 @@ const Todo = () => {
         }
       });
   
-      if (response.status !== 200) {
-        console.log(`Ocurrió un error ${response.status}`);
-      } else {
+      if (response.status === 200) {
         setTodos(updatedTodos);
+      } else if (response.status === 404) {
+        await createUser();
+      } else {
+        console.log(`Ocurrió un error ${response.status}`);
       }
     } catch (error) {
       console.log(error);
     }
   };
+  
   
   
 
@@ -124,12 +130,6 @@ const Todo = () => {
       setTaskInput("");
       
     }
-  };
-
-  const deleteTask = (label) => {
-    const updatedTodos = todos.filter((item) => item.label !== label);
-    deleteTaskApi(updatedTodos);
-
   };
 
   const handleKeyDown = (event) => {
@@ -159,7 +159,7 @@ const Todo = () => {
                 {item.label}
                 <button
                   className="delete-button"
-                  onClick={() => deleteTask(item.label)}
+                  onClick={() => deleteTaskApi(item.label)}
                 >
                   X
                 </button>
