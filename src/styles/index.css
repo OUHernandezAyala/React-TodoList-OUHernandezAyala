@@ -88,3 +88,24 @@ ul {
   li:hover .delete-button {
     display: inline-block;
   }
+
+  .delete-User{
+    display: grid;
+    align-items: center;
+    border: none;
+    border-radius: 20px;
+    display: flex;
+    height: 50px;
+    width: 110px;
+    justify-content: center;
+
+  }
+  .delete-User:hover{
+    background-color: #6b6b6b;
+    color: antiquewhite;
+  }
+
+  footer{
+    display: flex;
+    justify-content: center;
+  }
