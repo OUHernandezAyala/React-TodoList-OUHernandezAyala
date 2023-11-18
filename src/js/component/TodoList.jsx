@@ -5,8 +5,14 @@ const Todo = () => {
   const [taskInput, setTaskInput] = useState("");
 
   const getTask = async () => {
+    console.log("Entrando a getTask");
     try {
       const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/OUHernandezAyalaLatm23');
+      if (response.status === 404){
+        console.log(`Ocurrió un error ${response.status}.Debemos crear el ustario`)
+        createUser()
+        return;
+      }
       if (response.status !== 200) {
         console.log(`Ocurrió un error ${response.status}`);
         return;
@@ -17,6 +23,8 @@ const Todo = () => {
       console.log(error);
     }
   };
+
+  
 
   const putTask = async (taskInput) => {
     const newTodoApi = {
@@ -36,12 +44,51 @@ const Todo = () => {
       if (response.status !== 200) {
         console.log(`Ocurrió un error ${response.status}`);
       } else {
-        setTodos([...todos, newTodoApi]);
+        getTask()
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  const createUser = async () => {
+    console.log("Entrando a Crear Usuario")
+    try{
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/OUHernandezAyalaLatm23',{
+        method: "POST",
+        body: JSON.stringify([]),
+        headers:{
+          "Content-Type": "application/json"
+        }
+      })
+      if(response.status !== 201){
+        console.log(`Ocurrió un error ${response.status}`)
+        
+      }
+      console.log(`Se creo exitosamente el Usuario ${response.status}`)
+      getTask()
+    }
+    catch(error){
+      console.log(error)
+    }
+    
+  }
+
+  const deleteUser = async() =>{
+    try{
+    const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/OUHernandezAyalaLatm23',{
+      method:"DELETE"
+    });
+    if (response.status !== 200) {
+      console.log(`Ocurrió un error ${response.status}`)
+      getTask()}
+      
+    }
+    
+    catch(error){
+      console.log(error)
+    }
+  }
 
   const deleteTaskApi = async (updatedTodos) => {
     try {
@@ -67,16 +114,12 @@ const Todo = () => {
 
 
   useEffect(() => {
+    console.log("Llamando a getTask");
     getTask();
   }, []);
 
   const addTask = () => {
     if (taskInput.trim() !== "") {
-      const newTodo = {
-        id: Date.now().toString(),
-        label: taskInput,
-      };
-      setTodos([...todos, newTodo]);
       putTask(taskInput)
       setTaskInput("");
       
@@ -127,10 +170,18 @@ const Todo = () => {
           )}
           <div className="counter">{todos ? todos.length : 0} item</div>
         </ul>
+          <footer>
+          <button className="delete-User" onClick={(event)=>{
+            console.log("Delete Funtion")
+            deleteUser()
+          }}>
+              Delete User
+          </button>
+          </footer>
+            
       </div>
     </div>
   );
 };
 
 export default Todo;
-
