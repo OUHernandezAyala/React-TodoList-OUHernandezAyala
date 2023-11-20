@@ -79,13 +79,13 @@ const Todo = () => {
     });
     if (response.status !== 200) {
       console.log(`Ocurrió un error ${response.status}`)
-      createUser()}
-      
-    }
+    } 
     
+    }
     catch(error){
       console.log(error)
     }
+    
   }
 
   const deleteTaskApi = async (label) => {
@@ -93,7 +93,7 @@ const Todo = () => {
   
     if (updatedTodos.length === 0) {
       console.log("Eliminando usuario porque no hay tareas");
-      await deleteUser();
+      deleteUser();
       return;
     }
   
@@ -108,8 +108,9 @@ const Todo = () => {
   
       if (response.status === 200) {
         setTodos(updatedTodos);
+        getTask()
       } else if (response.status === 404) {
-        await createUser();
+        createUser();
       } else {
         console.log(`Ocurrió un error ${response.status}`);
       }
