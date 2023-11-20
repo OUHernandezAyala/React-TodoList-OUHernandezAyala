@@ -8,6 +8,9 @@ const Todo = () => {
     console.log("Entrando a getTask");
     try {
       const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/OUHernandezAyalaLatm23');
+      if(response.status === 404){
+        createUser()
+      }
       if (response.status !== 200) {
         console.log(`Ocurrió un error ${response.status}`);
         return;
