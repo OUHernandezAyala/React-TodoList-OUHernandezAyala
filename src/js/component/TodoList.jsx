@@ -80,7 +80,7 @@ const Todo = () => {
     if (response.status !== 200) {
       console.log(`Ocurrió un error ${response.status}`)
     } 
-    
+    getTask()
     }
     catch(error){
       console.log(error)
